@@ -1,13 +1,15 @@
-import React from 'react'
-import Header from '../components/Header'
+import React, { useState } from 'react';
+import Header from '../components/Header';
 
-const MainLayout = ({ children }) => {
+function MainLayout({ children }) {
+  const [searchTerm, setSearchTerm] = useState('');
+
   return (
     <div>
-      <Header />
-      <main>{children}</main>
+      <Header setSearchTerm={setSearchTerm} />
+      {React.cloneElement(children, { searchTerm })}
     </div>
-  )
+  );
 }
 
-export default MainLayout
+export default MainLayout;

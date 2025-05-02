@@ -1,10 +1,10 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import Register from './pages/Register'
-import Login from './pages/Login'
-import Home from './pages/Home'
-import MainLayout from './layout/MainLayout'
-import NotFound from './pages/NotFound'
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import MainLayout from './layout/MainLayout';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
         </MainLayout>
       } />
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;

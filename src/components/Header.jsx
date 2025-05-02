@@ -11,24 +11,27 @@ import {
 
 import Logo from '../assets/logo.svg';
 import blackSearchIcon from '../assets/blackSearchIcon.svg';
-import searchIcon from '../assets/searchIcon.svg';
-import xMarkIcon from '../assets/xIcons.svg';
 import userProfile from '../assets/user-image.png';
 import bellIcon from '../assets/bellIcon.svg';
 
-function Header() {
+function Header({ setSearchTerm }) {
   const [isFocused, setIsFocused] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [scrolled, setScrolled] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
 
+  const handleChange = (e) => {
+    setSearchValue(e.target.value);
+    setSearchTerm(e.target.value);
+  };
+
   const handleScroll = () => {
-    if (window.scrollY > 10) {
-      setScrolled(true);
+    if (window.scrollY > 0) {
+      setIsScrolled(true);
     } else {
-      setScrolled(false);
+      setIsScrolled(false);
     }
   };
 
@@ -47,7 +50,7 @@ function Header() {
       sx={{
         boxSizing: 'border-box',
         px: '80px',
-        backdropFilter: scrolled ? 'blur(8px)' : 'none',
+        backdropFilter: isScrolled ? 'blur(8px)' : 'none',
         transition: 'backdrop-filter 0.3s ease',
       }}
     >
@@ -86,7 +89,7 @@ function Header() {
             }}
           >
             <img
-              src={isFocused ? blackSearchIcon : searchIcon}
+              src={blackSearchIcon}
               alt="Search"
               style={{
                 zIndex: 1,
@@ -99,10 +102,10 @@ function Header() {
             />
             <InputBase
               placeholder="Search for any training you want"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
               onFocus={handleFocus}
               onBlur={handleBlur}
+              value={searchValue}
+              onChange={handleChange}
               sx={{
                 padding: '10px 40px',
                 backgroundColor: isFocused ? 'white' : 'transparent',
@@ -119,21 +122,6 @@ function Header() {
                 },
               }}
             />
-            {isFocused && searchTerm && (
-              <img
-                src={xMarkIcon}
-                alt="Clear"
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  setSearchTerm('');
-                }}
-                style={{
-                  position: 'absolute',
-                  right: '10px',
-                  cursor: 'pointer',
-                }}
-              />
-            )}
           </Box>
         </Box>
         <Box display="flex" alignItems="center" gap="24px">

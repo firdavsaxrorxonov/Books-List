@@ -14,8 +14,9 @@ const initialForm = {
   author: '',
 };
 
-function Home() {
+function Home({ searchTerm }) {
   const [books, setBooks] = useState([]);
+  const [filteredBooks, setFilteredBooks] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingBook, setEditingBook] = useState(null);
   const [form, setForm] = useState(initialForm);
@@ -24,16 +25,7 @@ function Home() {
     const savedBooks = localStorage.getItem('books');
     if (savedBooks) {
       setBooks(JSON.parse(savedBooks));
-    }
-
-    const savedOpen = localStorage.getItem('bookFormOpen');
-    if (savedOpen) {
-      setOpen(JSON.parse(savedOpen));
-    }
-
-    const savedForm = JSON.parse(localStorage.getItem('bookFormData'));
-    if (savedForm) {
-      setForm(savedForm);
+      setFilteredBooks(JSON.parse(savedBooks));
     }
   }, []);
 
@@ -41,24 +33,28 @@ function Home() {
     localStorage.setItem('books', JSON.stringify(books));
   }, [books]);
 
+  useEffect(() => {
+    const filtered = books.filter((book) =>
+      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredBooks(filtered);
+  }, [searchTerm, books]);
+
   const handleOpen = () => {
     setEditingBook(null);
     setForm(initialForm);
     setOpen(true);
-    localStorage.setItem('bookFormOpen', JSON.stringify(true));
   };
 
   const handleClose = () => {
     setOpen(false);
     setForm(initialForm);
-    localStorage.setItem('bookFormOpen', JSON.stringify(false));
-    localStorage.removeItem('bookFormData');
   };
 
   const handleChange = (e) => {
     const updatedForm = { ...form, [e.target.name]: e.target.value };
     setForm(updatedForm);
-    localStorage.setItem('bookFormData', JSON.stringify(updatedForm));
   };
 
   const handleSave = () => {
@@ -68,7 +64,7 @@ function Home() {
       return;
     }
 
-    if (editingBook !== null) {
+    if (editingBook) {
       const updated = books.map((b) =>
         b.isbn === editingBook.isbn ? { ...form } : b
       );
@@ -76,9 +72,7 @@ function Home() {
       toast.success('Kitob yangilandi!');
     } else {
       setBooks([...books, form]);
-      toast.success(
-        `✅ ‘${form.title}’ muvaffaqiyatli qo‘shildi! O‘qish orqali bilimlaringizni kengaytiring!`
-      );
+      toast.success(`✅ ‘${form.title}’ muvaffaqiyatli qo‘shildi!`);
     }
 
     handleClose();
@@ -113,7 +107,7 @@ function Home() {
       <div style={{ padding: '100px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h3" sx={{ color: 'white' }}>
-            You’ve got <span style={{ color: '#6200EE' }}>{books.length} book</span>
+            You’ve got <span style={{ color: '#6200EE' }}>{filteredBooks.length} book</span>
           </Typography>
           <Button
             variant="contained"
@@ -129,11 +123,24 @@ function Home() {
           Your books today
         </Typography>
 
-        <BookList books={books} onEdit={handleEdit} onDelete={handleDelete} />
+        <BookList books={filteredBooks} onEdit={handleEdit} onDelete={handleDelete} />
 
-        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          maxWidth="sm"
+          fullWidth
+
+        >
           <DialogTitle>{editingBook ? 'Edit Book' : 'Add Book'}</DialogTitle>
-          <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
+          <DialogContent
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+              mt: 1,
+            }}
+          >
             {Object.keys(initialForm).map((field) => (
               <TextField
                 key={field}
@@ -142,6 +149,9 @@ function Home() {
                 value={form[field] || ''}
                 onChange={handleChange}
                 fullWidth
+                sx={{
+                  mt: 1
+                }}
               />
             ))}
           </DialogContent>
@@ -152,6 +162,7 @@ function Home() {
             </Button>
           </DialogActions>
         </Dialog>
+
       </div>
     </div>
   );
