@@ -1,12 +1,7 @@
 import React, { useState } from 'react'
-import {
-  Box,
-  Button,
-  Container,
-  Typography,
-  Link,
-} from '@mui/material'
+import { Box, Button, Container, Typography, Link } from '@mui/material'
 import CustomTextFieldRegister from './CustomTextFieldRegister'
+import { useNavigate } from 'react-router-dom'  // import qilindi
 
 const initialForm = {
   username: '',
@@ -15,6 +10,7 @@ const initialForm = {
 }
 
 const RegisterForm = () => {
+  const navigate = useNavigate()  // useNavigate qo‘shildi
   const [formData, setFormData] = useState(initialForm)
   const [errors, setErrors] = useState({
     username: false,
@@ -43,6 +39,7 @@ const RegisterForm = () => {
     const hasError = Object.values(newErrors).some(Boolean)
     if (!hasError) {
       console.log('Form submitted:', formData)
+      navigate('/home')  // bu yerda home sahifasiga yo‘naltirish
     }
   }
 

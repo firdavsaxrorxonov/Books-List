@@ -8,7 +8,7 @@ function NotFound() {
   const navigate = useNavigate();
 
   const handleGoHome = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   const handleReload = () => {

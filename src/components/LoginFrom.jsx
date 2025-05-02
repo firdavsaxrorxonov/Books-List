@@ -31,13 +31,12 @@ const LoginForm = () => {
       password: password.trim() === '',
     }
 
-    navigate('/home')
-
     setErrors(newErrors)
 
     const hasError = Object.values(newErrors).some(Boolean)
     if (!hasError) {
       console.log('Form submitted:', formData)
+      navigate('/home')
     }
   }
 
