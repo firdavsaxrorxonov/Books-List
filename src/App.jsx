@@ -9,10 +9,10 @@ import NotFound from './pages/NotFound'
 function App() {
   return (
     <Routes>
-      <Route path='/sign-in' element={<Login />} />
+      <Route path='/' element={<Login />} />
       <Route path='/sign-up' element={<Register />} />
       <Route path='*' element={<NotFound />} />
-      <Route index element={
+      <Route path='/home' element={
         <MainLayout>
           <Home />
         </MainLayout>

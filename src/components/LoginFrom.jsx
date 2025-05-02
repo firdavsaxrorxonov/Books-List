@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Button, Container, Typography, Link } from '@mui/material'
 import CustomTextFieldLogin from './CustomTextFieldLogin'
+import { useNavigate } from 'react-router-dom'
 
 const initialForm = {
   username: '',
@@ -8,6 +9,7 @@ const initialForm = {
 }
 
 const LoginForm = () => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState(initialForm)
   const [errors, setErrors] = useState({
     username: false,
@@ -28,6 +30,9 @@ const LoginForm = () => {
       username: username.trim() === '',
       password: password.trim() === '',
     }
+
+    navigate('/home')
+
     setErrors(newErrors)
 
     const hasError = Object.values(newErrors).some(Boolean)
